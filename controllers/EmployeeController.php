@@ -1,12 +1,9 @@
 <?php
-// controllers/EmployeeController.php
 require_once 'models/Employee.php';
 
 class EmployeeController {
     
-    // Acción: Listar empleados (Index)
     public function index() {
-        // Traer datos crudos de Supabase
         $raw_employees = supabase_request('employees?select=*');
         
         $employees = [];
@@ -20,37 +17,54 @@ class EmployeeController {
             }
         }
         
-        // Cargar las vistas correspondientes
         $view = 'views/index.php';
         require 'views/layout.php';
     }
 
-    // Acción: Mostrar y procesar el formulario de registro (Create)
     public function create() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // Recibir datos del formulario del usuario
+            
+            $phone_number  = !empty($_POST['phone_number']) ? $_POST['phone_number'] : null;
+            $date_of_birth = !empty($_POST['date_of_birth']) ? $_POST['date_of_birth'] : null;
+            $hire_date     = !empty($_POST['hire_date']) ? $_POST['hire_date'] : date('Y-m-d');
+
             $new_data = [
-                'first_name'  => $_POST['first_name'],
-                'last_name'   => $_POST['last_name'],
-                'national_id' => $_POST['national_id'],
-                'email'       => $_POST['email'],
-                'date_of_birth' => $_POST['date_of_birth'] ?? '',
-                'department'  => $_POST['department'],
-                'job_title'   => $_POST['job_title'],
-                'base_salary' => floatval($_POST['base_salary']),
-                'bonuses'     => floatval($_POST['bonuses']),
-                'deductions'  => floatval($_POST['deductions'])
+                'first_name'    => $_POST['first_name'] ?? '',
+                'last_name'     => $_POST['last_name'] ?? '',
+                'national_id'   => $_POST['national_id'] ?? '',
+                'email'         => $_POST['email'] ?? '',
+                'phone_number'  => $phone_number,
+                'date_of_birth' => $date_of_birth,
+                'hire_date'     => $hire_date,
+                'department'    => $_POST['department'] ?? '',
+                'job_title'     => $_POST['job_title'] ?? '',
+                'base_salary'   => floatval($_POST['base_salary'] ?? 0),
+                'bonuses'       => floatval($_POST['bonuses'] ?? 0),
+                'deductions'    => floatval($_POST['deductions'] ?? 0)
             ];
 
-            supabase_request('employees', 'POST', $new_data);
+            $response = supabase_request('employees', 'POST', $new_data);
             
-            // Redirigir a la página principal
+
             header('Location: index.php');
             exit;
         }
 
-        // Si es GET, simplemente mostrar el formulario
         $view = 'views/create.php';
         require 'views/layout.php';
+    }
+
+    public function delete() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+            $id = $_GET['id'] ?? null;
+
+            if ($id) {
+                supabase_request('employees?id=eq.' . $id, 'DELETE');
+            }
+        }
+
+        header('Location: index.php');
+        exit;
     }
 }

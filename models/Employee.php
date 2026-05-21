@@ -1,5 +1,4 @@
 <?php
-// models/Employee.php
 
 class Employee {
     public $id;
