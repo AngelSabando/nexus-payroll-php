@@ -24,6 +24,10 @@
                             <input type="text" name="national_id" class="form-control" placeholder="ID Number" required />
                         </div>
                         <div class="col-md-4">
+                            <label class="form-label text-white-50">Date of Birth</label>
+                            <input type="date" name="date_of_birth" class="form-control" required />
+                        </div>
+                        <div class="col-md-4">
                             <label class="form-label text-white-50">Email Address</label>
                             <input type="email" name="email" class="form-control" placeholder="john@example.com" required />
                         </div>

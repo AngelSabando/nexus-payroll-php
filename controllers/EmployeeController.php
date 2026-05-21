@@ -34,6 +34,7 @@ class EmployeeController {
                 'last_name'   => $_POST['last_name'],
                 'national_id' => $_POST['national_id'],
                 'email'       => $_POST['email'],
+                'date_of_birth' => $_POST['date_of_birth'] ?? '',
                 'department'  => $_POST['department'],
                 'job_title'   => $_POST['job_title'],
                 'base_salary' => floatval($_POST['base_salary']),
@@ -41,7 +42,6 @@ class EmployeeController {
                 'deductions'  => floatval($_POST['deductions'])
             ];
 
-            // Enviar a Supabase sin incluir propiedades calculadas
             supabase_request('employees', 'POST', $new_data);
             
             // Redirigir a la página principal
